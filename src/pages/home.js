@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import { BottomNavigation } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProductList from './ProductList';
 
 const products = [
@@ -15,30 +17,65 @@ const products = [
   { id: '10', name: 'Havaiana Beach', price: 30.0 },
 ];
 
-export default function App() {
+const HomeScreen = ({ navigation }) => {
   const [cart, setCart] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'home', title: 'Home', icon: 'home' },
+    { key: 'menu', title: 'Menu', icon: 'menu' },
+  ]);
 
   const addToCart = (product) => {
     setCart([...cart, product]);
   };
 
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
+  const renderScene = BottomNavigation.SceneMap({
+    home: () => (
+      <SafeAreaView style={styles.safeArea}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Loja de Havaianas</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Icon name="person-add" size={24} color="#004D40" />
+          </TouchableOpacity>
         </View>
-        <ProductList products={products} addToCart={addToCart} />
-        <View style={styles.cartContainer}>
-          <Text style={styles.cartHeader}>Carrinho:</Text>
-          {cart.map((item, index) => (
-            <Text key={index} style={styles.cartItem}>{item.name} - ${item.price}</Text>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        <ScrollView style={styles.container}>
+          <ProductList products={products} addToCart={addToCart} />
+          <View style={styles.cartContainer}>
+            <Text style={styles.cartHeader}>Carrinho:</Text>
+            {cart.map((item, index) => (
+              <Text key={index} style={styles.cartItem}>{item.name} - ${item.price}</Text>
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    ),
+    menu: () => (
+      <View style={styles.scene}>
+        <Text>Menu</Text>
+      </View>
+    ),
+  });
+
+  return (
+    <View style={styles.container}>
+      <BottomNavigation
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+        renderIcon={({ route, color }) => {
+          let iconName;
+          if (route.key === 'home') {
+            iconName = 'home';
+          } else if (route.key === 'menu') {
+            iconName = 'menu';
+          }
+          return <Icon name={iconName} size={24} color={color} />;
+        }}
+        barStyle={styles.bar}
+      />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -47,11 +84,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
   },
   header: {
     fontSize: 28,
@@ -76,4 +117,15 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
+  scene: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bar: {
+    backgroundColor: '#fff',
+    elevation: 0, // Remove sombra
+  },
 });
+
+export default HomeScreen;

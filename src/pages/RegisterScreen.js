@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { TextInput, Button, Text } from 'react-native-paper';
+import { TextInput, Button, Text, Checkbox } from 'react-native-paper';
 
 const Register = ({ navigation }) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.innerContainer}>
@@ -23,6 +25,18 @@ const Register = ({ navigation }) => {
           style={styles.input}
           mode="outlined"
         />
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            status={isAdmin ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setIsAdmin(!isAdmin);
+            }}
+            color="#004D40" 
+            uncheckedColor="#004D40"
+            style={styles.checkbox} // Estilo aplicado diretamente ao checkbox
+          />
+          <Text style={styles.checkboxLabel}>Admin</Text>
+        </View>
         <Button 
           mode="contained" 
           onPress={() => navigation.navigate('Home')} 
@@ -45,11 +59,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#e0f7fa', // Fundo mais suave
+    backgroundColor: '#e0f7fa', 
   },
   innerContainer: {
     width: '100%',
-    maxWidth: 400, // Limita a largura máxima
+    maxWidth: 400, 
     padding: 20,
     backgroundColor: '#ffffff',
     borderRadius: 10,
@@ -66,6 +80,21 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     marginBottom: 10,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkbox: {
+    padding: 4,
+     width: 24,
+    height: 24,
+  },
+  checkboxLabel: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#004D40',
   },
   button: {
     width: '100%',

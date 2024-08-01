@@ -25,10 +25,7 @@ const Login = ({ navigation }) => {
         >
           Entrar
         </Button>
-        <Text style={styles.footerText}>
-          Não tem uma conta? 
-          <Text onPress={() => navigation.navigate('Register')} style={styles.link}> Cadastre-se</Text>
-        </Text>
+       
       </View>
     </ScrollView>
   );
