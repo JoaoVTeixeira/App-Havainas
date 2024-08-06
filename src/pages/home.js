@@ -17,7 +17,12 @@ const products = [
   { id: '10', name: 'Havaiana Beach', price: 30.0 },
 ];
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
+
+
+  const { token } = route.params;
+  console.log(token)
+
   const [cart, setCart] = useState([]);
   const [index, setIndex] = useState(0);
   const [routes] = useState([

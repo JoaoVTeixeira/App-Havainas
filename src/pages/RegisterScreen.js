@@ -1,9 +1,33 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { TextInput, Button, Text, Checkbox } from 'react-native-paper';
+import UserServices from './services/UserServices';
 
 const Register = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useState(false);
+  
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const handleRegister = async () => {
+     
+    body = {
+      name: nome,
+      email: email,
+      password: senha,
+      isAdmin: isAdmin
+    }
+    try {
+
+      
+      const register = await UserServices.register(body);
+      console.log(register.data.message)
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -13,17 +37,20 @@ const Register = ({ navigation }) => {
           label="Nome"
           style={styles.input}
           mode="outlined"
+          onChangeText={setNome}
         />
         <TextInput
           label="Email"
           style={styles.input}
           mode="outlined"
+          onChangeText={setEmail}
         />
         <TextInput
           label="Senha"
           secureTextEntry
           style={styles.input}
           mode="outlined"
+          onChangeText={setSenha}
         />
         <View style={styles.checkboxContainer}>
           <Checkbox
@@ -31,23 +58,23 @@ const Register = ({ navigation }) => {
             onPress={() => {
               setIsAdmin(!isAdmin);
             }}
-            color="#004D40" 
+            color="#004D40"
             uncheckedColor="#004D40"
             style={styles.checkbox} // Estilo aplicado diretamente ao checkbox
           />
           <Text style={styles.checkboxLabel}>Admin</Text>
         </View>
-        <Button 
-          mode="contained" 
-          onPress={() => navigation.navigate('Home')} 
+        <Button
+          mode="contained"
+          onPress={() => handleRegister()}
           style={styles.button}
         >
           Cadastrar
         </Button>
-        <Text style={styles.footerText}>
-          Já tem uma conta? 
+        {/* <Text style={styles.footerText}>
+          Já tem uma conta?
           <Text onPress={() => navigation.navigate('Login')} style={styles.link}> Faça login</Text>
-        </Text>
+        </Text> */}
       </View>
     </ScrollView>
   );
@@ -59,11 +86,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#e0f7fa', 
+    backgroundColor: '#e0f7fa',
   },
   innerContainer: {
     width: '100%',
-    maxWidth: 400, 
+    maxWidth: 400,
     padding: 20,
     backgroundColor: '#ffffff',
     borderRadius: 10,
@@ -88,7 +115,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     padding: 4,
-     width: 24,
+    width: 24,
     height: 24,
   },
   checkboxLabel: {

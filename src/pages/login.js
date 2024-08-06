@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
+import AuthServices from './services/AuthServices';
+import { useNavigation } from '@react-navigation/native';
 
-const Login = ({ navigation }) => {
+const Login = () => {
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const navigation = useNavigation();
+
+
+  const handleLogin = async () => {
+    
+
+    body= {
+      email: email,
+      password: senha
+    }
+
+    try {
+      const login = await AuthServices.login(body)
+      navigation.navigate('Home',{token: login.data.token})
+
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.innerContainer}>
@@ -10,22 +37,25 @@ const Login = ({ navigation }) => {
         <TextInput
           label="Email"
           style={styles.input}
+          onChangeText={setEmail}
           mode="outlined"
+
         />
         <TextInput
           label="Senha"
           secureTextEntry
           style={styles.input}
+          onChangeText={setSenha}
           mode="outlined"
         />
-        <Button 
-          mode="contained" 
-          onPress={() => navigation.navigate('Home')} 
+        <Button
+          mode="contained"
+          onPress={() => handleLogin()}
           style={styles.button}
         >
           Entrar
         </Button>
-       
+
       </View>
     </ScrollView>
   );
