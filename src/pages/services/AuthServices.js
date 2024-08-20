@@ -4,7 +4,7 @@ var AuthServices = {
   login: async (body) => {
     try {
 
-      var AuthAPI = axios.post('http://10.0.2.2:3000/auth/login', body);
+      var AuthAPI = axios.post('https://app-havaianas.adaptable.app/auth/login', body);
       return await AuthAPI;
     } catch (error) {
       throw error;
