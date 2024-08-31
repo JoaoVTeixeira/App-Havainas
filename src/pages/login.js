@@ -67,11 +67,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#e0f7fa', // Fundo mais suave
+    backgroundColor: '#e0f7fa', 
   },
   innerContainer: {
     width: '100%',
-    maxWidth: 400, // Limita a largura máxima
+    maxWidth: 400, 
     padding: 20,
     backgroundColor: '#ffffff',
     borderRadius: 10,

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { BottomNavigation } from 'react-native-paper';
+import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProductList from './ProductList';
 
@@ -17,68 +16,55 @@ const products = [
   { id: '10', name: 'Havaiana Beach', price: 30.0 },
 ];
 
-const HomeScreen = ({ navigation, route }) => {
-
-
-  const { token } = route.params;
-  console.log(token)
-
+const Home = ({ navigation }) => {
   const [cart, setCart] = useState([]);
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'home', title: 'Home', icon: 'home' },
-    { key: 'menu', title: 'Menu', icon: 'menu' },
-  ]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
+  const addToCart = (product, quantity = 1) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prevCart, { ...product, quantity }];
+    });
   };
 
-  const renderScene = BottomNavigation.SceneMap({
-    home: () => (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>Loja de Havaianas</Text>
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Loja de Havaianas</Text>
+        <View style={styles.iconsContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Icon name="person-add" size={24} color="#004D40" />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Cart', { cart })}>
+            <Icon name="shopping-cart" size={24} color="#004D40" style={styles.cartIcon} />
+          </TouchableOpacity>
         </View>
-        <ScrollView style={styles.container}>
-          <ProductList products={products} addToCart={addToCart} />
-          <View style={styles.cartContainer}>
-            <Text style={styles.cartHeader}>Carrinho:</Text>
-            {cart.map((item, index) => (
-              <Text key={index} style={styles.cartItem}>{item.name} - ${item.price}</Text>
-            ))}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    ),
-    menu: () => (
-      <View style={styles.scene}>
-        <Text>Menu</Text>
       </View>
-    ),
-  });
-
-  return (
-    <View style={styles.container}>
-      <BottomNavigation
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        renderScene={renderScene}
-        renderIcon={({ route, color }) => {
-          let iconName;
-          if (route.key === 'home') {
-            iconName = 'home';
-          } else if (route.key === 'menu') {
-            iconName = 'menu';
-          }
-          return <Icon name={iconName} size={24} color={color} />;
-        }}
-        barStyle={styles.bar}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Pesquisar produtos..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
       />
-    </View>
+      <ScrollView style={styles.container}>
+        <ProductList
+          products={filteredProducts}
+          addToCart={addToCart}
+          navigation={navigation}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -104,33 +90,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  cartContainer: {
-    marginTop: 20,
-    paddingTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  cartHeader: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  cartItem: {
-    fontSize: 18,
-    color: '#666',
-    textAlign: 'center',
-  },
-  scene: {
-    flex: 1,
-    justifyContent: 'center',
+  iconsContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  bar: {
+  cartIcon: {
+    marginLeft: 20,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    margin: 20,
     backgroundColor: '#fff',
-    elevation: 0, // Remove sombra
   },
 });
 
-export default HomeScreen;
+export default Home;
