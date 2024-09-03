@@ -27,8 +27,10 @@ export default function ProductItem({ product, addToCart, navigation }) {
           source={{ uri: 'https://via.placeholder.com/150' }} 
         />
       </TouchableOpacity>
-      <Text style={styles.name}>{product.name}</Text>
-      <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+      <Text style={styles.name}>{product.nome}</Text>
+      {/* <Text style={styles.price}>${product.price.toFixed(2)}</Text> */}
+      <Text style={styles.price}>$25.0</Text>
+
       {!showQuantity ? (
         <View style={styles.buttonContainer}>
           <Button title="Adicionar ao Carrinho" onPress={handleAddToCart} />

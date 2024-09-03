@@ -14,11 +14,18 @@ const ProductDetailScreen = ({ route, navigation }) => {
     <ScrollView style={styles.container}>
       <Image source={{ uri: 'https://via.placeholder.com/400' }} style={styles.image} />
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{product.name}</Text>
+        <Text style={styles.title}>{product.nome} - {product.codigo_estampa}</Text>
         <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
         <Text style={styles.description}>
-          Descrição do produto. (Adicione uma descrição mais detalhada aqui.)
+          Gênero:{product.genero}
+
         </Text>
+        {/* Temporário, remover depois */}
+        <Text style={styles.description}>
+          Marca:{product.marca}
+
+        </Text>
+
         <View style={styles.quantityContainer}>
           <TextInput
             style={styles.input}
@@ -26,8 +33,8 @@ const ProductDetailScreen = ({ route, navigation }) => {
             value={String(quantity)}
             onChangeText={(value) => setQuantity(Number(value))}
           />
-          <TouchableOpacity 
-            style={styles.addButton} 
+          <TouchableOpacity
+            style={styles.addButton}
             onPress={handleAddToCart}
           >
             <Text style={styles.addButtonText}>Adicionar ao Carrinho</Text>

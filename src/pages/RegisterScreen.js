@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { TextInput, Button, Text, Checkbox } from 'react-native-paper';
-//import UserServices from './services/UserServices';
+import UserServices from './services/UserServices';
 
 const Register = ({ navigation }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -18,15 +18,15 @@ const Register = ({ navigation }) => {
       password: senha,
       isAdmin: isAdmin
     }
-    //try {
+    try {
 
       
-      //const register = await UserServices.register(body);
-      //console.log(register.data.message)
+      const register = await UserServices.register(body);
+      console.log(register.data.message)
 
-    //} catch (error) {
-     // console.error(error)
-    //}
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

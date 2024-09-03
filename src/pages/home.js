@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProductList from './ProductList';
+import ProductsServices from './services/ProductsServices';
 
 const products = [
   { id: '1', name: 'Havaiana Classic', price: 25.0 },
@@ -19,23 +20,44 @@ const products = [
 const Home = ({ navigation }) => {
   const [cart, setCart] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
 
-  const addToCart = (product, quantity = 1) => {
+        const response = await ProductsServices.getProducts();
+
+        console.log(response.data);
+        setProducts(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  //temporário até o Davi remover o preço do front rs
+  const updatedProducts = products.map(product => ({
+    ...product,
+    price: 25.0
+  }));
+
+  const addToCart = (updatedProducts, quantity = 1) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
+      const existingItem = prevCart.find(item => item.id === updatedProducts.id);
       if (existingItem) {
         return prevCart.map(item =>
-          item.id === product.id
+          item.id === updatedProducts.id
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      return [...prevCart, { ...product, quantity }];
+      return [...prevCart, { ...updatedProducts, quantity }];
     });
   };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = updatedProducts.filter(product =>
+    product.nome.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
